@@ -10,7 +10,6 @@ const distubeEvents = require('./distubeEvents.js');
 const profileModel = require('./mongoSchema/profile');
 const guildModel = require('./mongoSchema/guild');
 
-
 //const voicexp = require('./voicexp')
 
 var prefix = "'";
@@ -61,36 +60,17 @@ client.distube
 
 client.commands = new Discord.Collection();
 
-const funCommands = fs.readdirSync(`./commands/fun`);
-const geralCommands = fs.readdirSync(`./commands/geral`);
-const imagesCommands = fs.readdirSync(`./commands/images`);
-const modCommands = fs.readdirSync(`./commands/mod`);
-const moneyCommands = fs.readdirSync(`./commands/money`);
-const musicCommands = fs.readdirSync(`./commands/music`);
+const mainFolderCommands = fs.readdirSync('./commands');
 
-for (const file of funCommands) {
-  var cmd = require(`./commands/fun/${file}`);
-  client.commands.set(cmd.name, cmd);
-}
-for (const file of geralCommands) {
-  var cmd = require(`./commands/geral/${file}`);
-  client.commands.set(cmd.name, cmd);
-}
-for (const file of imagesCommands) {
-  var cmd = require(`./commands/images/${file}`);
-  client.commands.set(cmd.name, cmd);
-}
-for (const file of modCommands) {
-  var cmd = require(`./commands/mod/${file}`);
-  client.commands.set(cmd.name, cmd);
-}
-for (const file of moneyCommands) {
-  var cmd = require(`./commands/money/${file}`);
-  client.commands.set(cmd.name, cmd);
-}
-for (const file of musicCommands) {
-  var cmd = require(`./commands/music/${file}`);
-  client.commands.set(cmd.name, cmd);
+for (const subFolder of mainFolderCommands) {
+
+  var categoryFolder = fs.readdirSync(`./commands/${subFolder}`);
+
+  for (const file of categoryFolder) {
+    var cmd = require(`./commands/${subFolder}/${file}`);
+    client.commands.set(cmd.name, cmd);
+  }
+
 }
 
 client.on('ready', async () => {
@@ -148,7 +128,7 @@ client.on('message', async message => {
         var randomXP = Math.ceil(Math.random() * 3) + 3;
         var cooldownXP = new Date(Date.now() - profileData.lastEditXP)
 
-        if (cooldownXP > 10815) {
+        if (cooldownXP > 15) {
 
           let xpToAdd = await profileModel.findOneAndUpdate(
             {
