@@ -12,13 +12,13 @@ module.exports = {
 
     let user2 = message.mentions.users.first() || client.users.cache.get(args[0]);
 
-    if (args[0] && !user2)
-      return message.channel.send({embed: {color: '#b3c20c', title: 'usuário informado não encontrado'}});
+    if (args[0] && !user2) return message.channel.send({embed: {
+      color: '#b3c20c', title: 'usuário informado não encontrado'
+    }});
 
-    if (user2.bot)
-      return message.channel.send(
-        {embed: { title: `${user.tag} <:bot_tag:861720010283417611>` , description: 'Bip Bop | Bots não possuem perfil ou valor em LunaBits' }}
-      );
+    if (user2.bot) return message.channel.send({embed: 
+        { title: `${user2.username} <:bot_tag:861720010283417611>` , description: 'Bip Bop | Bots não possuem perfil ou saldo em LunaBits' 
+      }});
 
     let profileData1 = await profileModel.findOne({userID: message.author.id});
     let profileData2 = await profileModel.findOne({userID: user2.id});
@@ -30,7 +30,7 @@ module.exports = {
     let failEmbed = new Discord.MessageEmbed()
       .setColor('#b3c20c')
       .setTitle('Você não possui esse valor na carteira para depositar')
-      .setDescription(`Você atualmente tem ${profileData.coins} na carteira, e ${profileData.bank} no banco`);
+      .setDescription(`Você atualmente tem ${profileData1.coins} na carteira, e ${profileData1.bank} no banco`);
 
     if( profileData1.coins < valor ) return message.channel.send(failEmbed);
 
@@ -46,13 +46,25 @@ module.exports = {
     );
     profileUpdate1.save();
 
+    let profileUpdate2 = await profileModel.findOneAndUpdate(
+      {
+        userID: user2.id,
+      }, {
+          $inc:{
+            coins: valor
+          },
+          lastEditMoney: Date.now()
+        }
+    );
+    profileUpdate2.save();
+
     let embed = new Discord.MessageEmbed()
       .setColor('#00ffff')
-      .setTitle('Transferência efetuada com sucesso')
+      .setTitle('📤Transferência efetuada com sucesso📥')
       .addFields(
         {name: 'valor', value: valor,},
         {name: 'seu saldo atual', value: (profileData1.coins - valor)},
-        {name: `saldo atual de ${user2.tag}`, value: (profileData2.bank + valor)}
+        {name: `saldo atual de ${user2.username}`, value: (profileData2.bank + valor)}
       );
 
     message.channel.send(embed);
