@@ -21,13 +21,14 @@ module.exports = {
 
     let lastDaily = new Date(profileCheck.lastDaily);
 
-    if (lastDaily.getDate() == dateNow.getDate()) return message.channel.send(failEmbed);
+    if (lastDaily.getDate() == dateNow.getDate() && lastDaily < 183600 )
+      return message.channel.send(failEmbed);
 
     let profileData = await profileModel.findOneAndUpdate(
       {
         userID: message.author.id,
       }, {
-          $inc: {bank: randomCoins},
+          $inc: {coins: randomCoins},
           lastDaily: Date.now()
         }
     )
