@@ -34,17 +34,15 @@ module.exports = {
         embed.setDescription(`meu prefixo padrão é ' (aspas simples)\nmeu prefixo nesse servidor é ${prefix}`);
       } else {
         var prefix = "'";
-        embed.setDescription(`meu prefixo padrão é ' (aspas simples)
-        Caso deseje, entre no servidor de suporte e demais interações da Luna: [Luna Lab](https://discord.gg/VFJAqE7Uz6)`)
+        embed.setDescription(
+          `Um bot experimental com comandos de moderação, player de música, mini jogos, sistema de economia e muito mais
+          meu prefixo padrão é ' (aspas simples)
+          Caso deseje, entre no servidor de suporte e demais interações da Luna: [Luna Lab](https://discord.gg/VFJAqE7Uz6)`)
       }
 
       embed
         .setTitle('🌙 Olá, eu sou a Luna')
         .addFields(
-          {
-            name: '\u200b',
-            value: 'Um bot experimental com comandos de moderação, player de música, mini jogos, sistema de economia e muito mais'
-          },
           {
             name: '\u200b',
             value: `para ver os comandos de cada categoria, digite "${prefix}help" seguido do nome da categoria
@@ -54,32 +52,32 @@ module.exports = {
             name: 'Geral',
             value: '` ou: "util", "utilidades", "general"`\ncomandos diversos e utilidades`',
             inline: true
-        },
-        {
-          name: 'Diversão',
-          value: '` ou: "fun", "jogos", "games"`\nmini jogos da luna, valendo moedas ou não`',
-          inline: true
-        },
-        {
-          name: 'Imagens',
-          value: '` ou: "images", "img", "memes"`\ngeradores de memes, ou interações como "kiss" e "hug"`',
-          inline: true
-        },
-        {
-          name: 'Música',
-          value: '` ou: "music", "player"`\nreprodução de música`',
-          inline: true
-        },
-        {
-          name: 'Moderação',
-          value: '` ou: "mod", "admin", "adm"`\ncomandos para organização e controle do servidor e seus membros`',
-          inline: true
-        },
-        {
-          name: 'Economia',
-          value: '` ou: "money", "dinheiro", "lunaBits", "bits"`\ncomandos de gerenciamento das suas LunaBits, as moedas da Luna`',
-          inline: true
-        }
+          },
+          {
+            name: 'Diversão',
+            value: '` ou: "fun", "jogos", "games"`\nmini jogos da luna, valendo moedas ou não`',
+            inline: true
+          },
+          {
+            name: 'Imagens',
+            value: '` ou: "images", "img", "memes"`\ngeradores de memes, ou interações como "kiss" e "hug"`',
+            inline: true
+          },
+          {
+            name: 'Música',
+            value: '` ou: "music", "player"`\nreprodução de música`',
+            inline: true
+          },
+          {
+            name: 'Moderação',
+            value: '` ou: "mod", "admin", "adm"`\ncomandos para organização e controle do servidor e seus membros`',
+            inline: true
+          },
+          {
+            name: 'Economia',
+            value: '` ou: "money", "dinheiro", "lunaBits", "bits"`\ncomandos de gerenciamento das suas LunaBits, as moedas da Luna`',
+            inline: true
+          }
       );
 
     }
