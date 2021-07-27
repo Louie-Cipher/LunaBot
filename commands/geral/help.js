@@ -4,8 +4,8 @@ const guildModel = require('../../mongoSchema/guild');
 
 module.exports = {
   name: 'help',
-  aliases: ['ajuda', 'commands', 'comandos'],
-  description: "mostra todos os meus comandos e a descrição deles (essa mensagem 😉)",
+  aliases: ['ajuda', 'commands', 'comandos', 'cmds', 'info'],
+  description: "mostra todos os meus comandos e a descrição deles, ou seja, esse comando 😉 (quebra da 4° parede?)",
   dmAllow: true,
 
   async execute(client, message, args) {
@@ -20,7 +20,6 @@ module.exports = {
     let embed = new Discord.MessageEmbed()
       .setColor('#00eeff')
 
-    
     var geralCommands = fs.readdirSync(`./commands/geral`);
     var imagesCommands = fs.readdirSync(`./commands/images`);
     var modCommands = fs.readdirSync(`./commands/mod`);
@@ -35,17 +34,26 @@ module.exports = {
         embed.setDescription(`meu prefixo padrão é ' (aspas simples)\nmeu prefixo nesse servidor é ${prefix}`);
       } else {
         var prefix = "'";
-        embed.setDescription(`meu prefixo padrão é ' (aspas simples)`)
+        embed.setDescription(`meu prefixo padrão é ' (aspas simples)
+        Caso deseje, entre no servidor de suporte e demais interações da Luna: [Luna Lab](https://discord.gg/VFJAqE7Uz6)`)
       }
 
-      embed.setTitle('🌙 Olá, eu sou a Luna. Um bot experimental com mini jogos, player de música, e muito mais')
-      embed.addFields({ name: '\u200b', value: `para ver os comandos de cada categoria, digite "${prefix}help" seguido do nome da categoria\nexemplo: "${prefix}help mod" ou "${prefix}help musica"` })
-
-      embed.addFields(
-        {
-          name: 'Geral',
-          value: '` ou: "util", "utilidades", "general"`\ncomandos diversos e utilidades`',
-          inline: true
+      embed
+        .setTitle('🌙 Olá, eu sou a Luna')
+        .addFields(
+          {
+            name: '\u200b',
+            value: 'Um bot experimental com comandos de moderação, player de música, mini jogos, sistema de economia e muito mais'
+          },
+          {
+            name: '\u200b',
+            value: `para ver os comandos de cada categoria, digite "${prefix}help" seguido do nome da categoria
+            exemplo: "${prefix}help mod" ou "${prefix}help musica"`
+          },
+          {
+            name: 'Geral',
+            value: '` ou: "util", "utilidades", "general"`\ncomandos diversos e utilidades`',
+            inline: true
         },
         {
           name: 'Diversão',
