@@ -26,7 +26,9 @@ module.exports = {
     if (!profileData) return message.channel.send({embed: {color: '#009999', title: 'Esse usuário ainda não possui um perfil na Luna', description: 'um perfil será criado automaticamente após o usuário enviar uma mensagem pela primeira vez'}});
 
     let lastEdit = new Date(profileData.lastEditMoney);
-    let dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '' };
+    let dateOptions = {
+      year: 'numeric', month: '2-digit', day: '2-digit', hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit'
+    };
 
     let embed = new Discord.MessageEmbed()
       .setColor('#00ffff')
@@ -37,7 +39,7 @@ module.exports = {
         embed.addFields(
           {name: 'carteira', value: profileData.coins},
           {name: 'banco', value: profileData.bank},
-          {name: 'última alteração de saldo', value:	lastEdit.toLocaleDateString('pt-BR', dateOptions) }
+          {name: 'última alteração de saldo', value: lastEdit.toLocaleDateString('pt-BR', dateOptions) }
         )
       } else {
         embed.addFields(
