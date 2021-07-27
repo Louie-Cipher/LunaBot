@@ -10,9 +10,22 @@ module.exports = {
 
     let profileData = await profileModel.findOne({userID: message.author.id});
 
-    let valor = parseInt(args[0]);
+    let allNames = ['all', 'tudo', 'total'];
 
-    if(!valor || valor < 1) return message.channel.send({embed: {color: '#f0f000', title: 'informe um valor para sacar do banco', description: 'o valor precisa ser um número inteiro (sem virgula) e positivo'}});
+    let valor = 0;
+
+    if(allNames.includes(args[0]) ) {
+      valor = profileData.bank;
+    } else if(!allNames.includes(args[0])) {
+      valor = parseInt(args[0]);
+    }
+    
+
+    if(!valor || valor < 1) return message.channel.send({embed: {
+      color: '#f0f000',
+      title: 'informe um valor para sacar do banco',
+      description: 'o valor precisa ser um número inteiro (sem virgula) e positivo'
+    }});
 
     let failEmbed = new Discord.MessageEmbed()
       .setColor('#b3c20c')
