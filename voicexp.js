@@ -25,6 +25,7 @@ module.exports = {
 
         if (member.user.bot) return;
         if (!member.voice.channel) return;
+        if (member.voice.channel.members.size == 1) return;
         if (member.voice.deaf) return;
         if (member.voice.mute) return;
 
