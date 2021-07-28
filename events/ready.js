@@ -1,27 +1,27 @@
 module.exports = {
 
-	name: 'ready',
-	once: true,
+  name: 'ready',
+ 
+  async eventTrigger(client) {
 
-	async execute(client) {
-		
-  console.log('Carregando');
+    console.log('Carregando');
+    console.log('_'.repeat(27));
+    client.commands.forEach(cmd => {
+      console.log('\x1b[4m%s\x1b[0m', '| ' + cmd.name + ' '.repeat(15 - cmd.name.length) + '| ✅  |')
+    });
+    console.log('\x1b[4m%s\x1b[0m', `|| ${client.user.tag} online! 🌎  ||`);
 
-  client.commands.forEach(cmd => {
-		  console.log(` | ${cmd.name} | OK |`);
-	  });
-    console.log(`|| ${client.user.tag} online! ||`);
+    let activities = [
+      `Utilize 'help para ver uma lista com todos os meus comandos`,
+      `Olá, eu sou a Luna. um bot experimental criado pela Louie.`,
+      `estou em ${client.guilds.cache.size} servidores.`,
+      `${client.users.cache.size} usuários.`
+    ],
+      i = 0;
 
-  let activities = [
-    `Utilize l.help para ver uma lista com todos os meus comandos`,
-    `Olá, eu sou a Luna. um bot experimental criado pela Louie.`,
-    `${client.channels.cache.size} canais.`,
-    `${client.users.cache.size} usuários.`
-  ],
-  i = 0;
-  setInterval( () =>
-    client.user.setActivity(`${activities[i++ % activities.length]}`, {type: 'PLAYING'}),
-    1000 * 10 );
+    setInterval(() =>
+      client.user.setActivity(`${activities[i++ % activities.length]}`, { type: 'PLAYING' }),
+      1000 * 15);
 
-	},
+  }
 };
