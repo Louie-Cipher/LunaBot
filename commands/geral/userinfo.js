@@ -17,26 +17,29 @@ module.exports = {
 
     let avatar = user.avatarURL({ dynamic: true, format: "png"});
 
-    const dateNow = new Date();
-
     let dateOptions = {
+      day: 'numeric',
+      month: 'numeric',
       year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
       hourCycle: 'h23',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
     };
-
-    const userCreated = new Date(user.createdAt).toLocaleDateString('pt-BR', dateOptions)
 
     const userCreatedFormated =
     `${user.createdAt.getDate()}/${user.createdAt.getMonth()}/${user.createdAt.getFullYear()} - ${user.createdAt.getHours()}:${user.createdAt.getMinutes()}`;
 
+    const dateNow = new Date();
+    const userCreated = new Date(user.createdAt).toLocaleDateString('pt-BR', dateOptions);
     const userTime = new Date(dateNow - user.createdAt);
 
-    const userTimeFormated = `a ${userTime.getFullYear() - 1970} ano(s), ${userTime.getMonth() + 1} mes(es), ${userTime.getDate()} dia(s), ${userTime.getHours()} hora(s) e ${userTime.getMinutes()} minuto(s)`
+    var userTimeFormated = '';
+
+    if(userTime.getFullYear() - 1970 != 0) { userTimeFormated += `a ${userTime.getFullYear() - 1970} ano(s) ` }
+    if(userTime.getMonth() != 0) { userTimeFormated += `${userTime.getMonth()} mes(es) ` }
+    if(userTime.getDate()-1 != 0) { userTimeFormated += `${userTime.getDate() -1} dia(as) ` }
+    if(userTime.getHours() != 0) { userTimeFormated += `${userTime.getHours()} hora(s) ` }
+    if(userTime.getMinutes() != 0) { userTimeFormated += `${userTime.getMinutes()} minuto(s)` }
 
     let embed = new Discord.MessageEmbed()
       .setColor('#008f81')
@@ -47,59 +50,45 @@ module.exports = {
       .addFields(
         {name: '🆔 Discord ID', value: `${user.id}`, inline: true},
         {
-          name: '📅 Conta criada em',
-          value: `${userCreated} \n${userTimeFormated}`,
+          name: '🗓️ Conta criada em',
+          value: `${userCreated}\n${userTimeFormated}`,
           inline: true
         }
       );
 
     if(member){
 
-      //member = await message.guild.members.fetch(user);
-
       const memberTime = new Date(dateNow - member.joinedAt);
       
-      const memberJoined = {
-        year: member.joinedAt.getFullYear(),
-        month: member.joinedAt.getMonth() + 1,
-        day: member.joinedAt.getDate(),
-        dayWeek: member.joinedAt.getDay(),
-        hour: member.joinedAt.getHours(),
-        minute: member.joinedAt.getMinutes(),
-        second: member.joinedAt.getSeconds()
-      }
+      const memberJoined = new Date(member.joinedAt).toLocaleDateString('pt-BR', dateOptions);
 
-      const memberJoinedFormated = `${memberJoined.day}/${memberJoined.month}/${memberJoined.year} - ${memberJoined.hour}:${memberJoined.minute}`;
+      var memberTimeFormated = '';
 
-      const memberTimeFormated = `a ${memberTime.getFullYear() - 1970} ano(s), ${memberTime.getMonth() + 1} mes(es), ${memberTime.getDate()} dia(s), ${memberTime.getHours()} hora(s) e ${memberTime.getMinutes()} minuto(s)`;
+      if(memberTime.getFullYear() - 1970 != 0) { memberTimeFormated += `a ${memberTime.getFullYear() - 1970} ano(s) ` }
+      if(memberTime.getMonth() != 0) { memberTimeFormated += `${memberTime.getMonth()} mes(es) ` }
+      if(memberTime.getDate()-1 != 0) { memberTimeFormated += `${memberTime.getDate()-1} dia(as) ` }
+      if(memberTime.getHours() != 0) { memberTimeFormated += `${memberTime.getHours()} hora(s) ` }
+      if(memberTime.getMinutes() != 0) { memberTimeFormated += `${memberTime.getMinutes()} minuto(s)` }
 
       embed.addFields(
         {
           name: '✨ Entrou no servidor em',
-          value: `${memberJoinedFormated} \n${memberTimeFormated}`
+          value: `${memberJoined} \n${memberTimeFormated}`
         })
 
       if(member.premiumSince) {
 
-        const memberBoosted = {
-          year: member.premiumSince.getFullYear(),
-          month: member.premiumSince.getMonth() + 1,
-          day: member.premiumSince.getDate(),
-          dayWeek: member.premiumSince.getDay(),
-          hour: member.premiumSince.getHours(),
-          minute: member.premiumSince.getMinutes(),
-          second: member.premiumSince.getSeconds()
-        }
+        let memberBoosted = new Date(member.premiumSince).toLocaleDateString('pt-BR', dateOptions)
 
         embed.addFields(
-          {name: '<:boost:868983673641381908> impulsionando o servidor desde', value: `${memberBoosted.day}/${memberBoosted.month}/${memberBoosted.year} - ${memberBoosted.hour}:${memberBoosted.minute}` }
+          {name: '<:boost:868983673641381908> Impulsionando o servidor desde', value: `${memberBoosted}` }
         )
       }
 
       if (member.nickname){
         embed.addFields(
         {
-          name: 'nickname no servidor', value: member.nickname
+          name: 'Apelido no servidor', value: member.nickname
         })
       }
     }
