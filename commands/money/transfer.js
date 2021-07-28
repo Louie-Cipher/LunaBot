@@ -12,27 +12,40 @@ module.exports = {
 
     let user2 = message.mentions.users.first() || client.users.cache.get(args[0]);
 
-    if (args[0] && !user2) return message.channel.send({embed: {
+    if(!args[0] || !args[1]) return message.channel.send({embed: {
+      color: '#f0f000',
+      title: 'Transferência de LunaBits',
+      description: `mencione alguém ou informe um ID, e o valor que deseja transferir da sua carteira para a carteira da pessoa
+      Exemplo: \`transfer @Luna 250\``
+    }});
+
+    if (!user2) return message.channel.send({embed: {
       color: '#b3c20c', title: 'usuário informado não encontrado'
     }});
 
-    if (user2.bot) return message.channel.send({embed: 
-        { title: `${user2.username} <:bot_tag:861720010283417611>` , description: 'Bip Bop | Bots não possuem perfil ou saldo em LunaBits' 
+    if (user2.bot) return message.channel.send({embed: {
+       title: `${user2.username} <:bot_tag:861720010283417611>`,
+       description: '🤖 Bip Bop | Bots não possuem perfil ou saldo em LunaBits' 
       }});
 
     let profileData1 = await profileModel.findOne({userID: message.author.id});
     let profileData2 = await profileModel.findOne({userID: user2.id});
 
-    if (!profileData2) return message.channel.send({embed: {color: '#b3c20c', title: 'usuário informado não possui LunaBits ou um perfil na Luna'}})
+    if (!profileData2) return message.channel.send({embed: {
+      color: '#b3c20c',
+      title: 'usuário informado ainda não possui LunaBits ou um perfil na Luna'
+    }});
 
-    if(!valor || valor < 1) return message.channel.send({embed: {color: '#f0f000', title: 'informe um valor para transferir', description: 'o valor precisa ser um número inteiro (sem virgula) e positivo'}});
+    if(!valor || valor < 1) return message.channel.send({embed: {
+      color: '#f0f000', title: 'informe um valor para transferir',
+      description: 'o valor precisa ser um número inteiro (sem virgula) e positivo (maior que zero)'
+    }});
 
-    let failEmbed = new Discord.MessageEmbed()
-      .setColor('#b3c20c')
-      .setTitle('Você não possui esse valor na carteira para depositar')
-      .setDescription(`Você atualmente tem ${profileData1.coins} na carteira, e ${profileData1.bank} no banco`);
-
-    if( profileData1.coins < valor ) return message.channel.send(failEmbed);
+    if( profileData1.coins < valor ) return message.channel.send({embed: {
+      color: '#b3c20c',
+      title: 'Você não possui esse valor na carteira para depositar',
+      description: `Você atualmente tem ${profileData1.coins} na carteira, e ${profileData1.bank} no banco`
+    }});
 
     let profileUpdate1 = await profileModel.findOneAndUpdate(
       {
