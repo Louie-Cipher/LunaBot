@@ -239,14 +239,17 @@ client.on("voiceStateUpdate", function(oldMember, newMember) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  async function loop() {
+  async function loop(client) {
     while (true) {
 
       require('./voicexp').voiceXpAdd(client);
 
-      await delay(1000 * 10);
+      await delay(1000 * 60);
     }
   }
+
+
+loop(client)
 
 
 client.login(process.env.token_bot);

@@ -3,66 +3,75 @@ module.exports = {
 
   async voiceXpAdd(client) {
 
-    console.log('-- adcionando XP --')
+    console.log('-- adcionando Voice XP --');
 
-  let randomVoiceXP = Math.ceil(Math.random() * 3) + 3;
+    let randomVoiceXP = Math.ceil(Math.random() * 3) + 3;
 
-  client.guilds.cache.forEach(guild => {
+    let guildsCache = client.guilds.cache;
 
-    console.log('guild: ' + guild.name)
+    for (var guildCached of guildsCache) {
 
-    guild.members.cache.forEach(member => {
+      let guild = guildCached[1];
 
-      console.log('membro: ' + member.user.tag);
+      console.log('guild: ' + guild.name);
 
-      if (!member.voice.channel) return;
-      if (member.voice.deaf) return;
-      if (member.voice.mute) return;
+      let membersCache = guild.members.cache;
 
-      console.log('adcionando voice XP')
+      for (var memberCached of membersCache) {
 
-      try {
-        let profileData = await profileModel.findOne({ userID: member.user.id });
+        let member = memberCached[1];
 
-        if (!profileData) {
-          let profileNew = await profileModel.create({
-            userID: member.user.id,
-            chatXP: 1,
-            voiceXP: randomVoiceXP,
-            coins: 100,
-            bank: 200,
-            lastEditXP: Date.now(),
-            lastEditMoney: Date.now(),
-            lastDaily: Date.now(),
-            created: Date.now()
-          });
-          profileNew.save();
+        console.log('membro: ' + member.user.tag);
 
-          // ----AUMENTAR XP ----//
+        if (member.user.bot) return;
+        if (!member.voice.channel) return;
+        if (member.voice.deaf) return;
+        if (member.voice.mute) return;
 
-        } else if (profileData) {
+        console.log('adcionando voice XP');
 
-          let voiceXpToAdd = await profileModel.findOneAndUpdate(
-            {
+        try {
+          let profileData = await profileModel.findOne({ userID: member.user.id });
+
+          if (!profileData) {
+            let profileNew = await profileModel.create({
               userID: member.user.id,
-            }, {
-              $inc: { voiceXP: randomVoiceXP },
-              lastEditXP: Date.now()
-            }
-          );
-          voiceXpToAdd.save();
+              chatXP: 1,
+              voiceXP: randomVoiceXP,
+              coins: 100,
+              bank: 200,
+              lastEditXP: Date.now(),
+              lastEditMoney: Date.now(),
+              lastDaily: Date.now(),
+              created: Date.now()
+            });
+            profileNew.save();
+
+            // ----AUMENTAR XP ----//
+
+          } else if (profileData) {
+
+            let voiceXpToAdd = await profileModel.findOneAndUpdate(
+              {
+                userID: member.user.id,
+              }, {
+                $inc: { voiceXP: randomVoiceXP },
+                lastEditXP: Date.now()
+              }
+            );
+            voiceXpToAdd.save();
+          }
+
+
+        } catch (erro) {
+          console.log(erro);
         }
 
 
-      } catch (erro) {
-        console.log(erro);
-      }
 
+      };
 
-
-    });
-
-  });
+  };
 
   }
 }
