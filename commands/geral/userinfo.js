@@ -19,25 +19,20 @@ module.exports = {
 
     const dateNow = new Date();
 
-    const userCreated = {
-      year: user.createdAt.getFullYear(),
-      month: user.createdAt.getMonth() + 1,
-      day: user.createdAt.getDate(),
-      dayWeek: user.createdAt.getDay(),
-      hour: user.createdAt.getHours(),
-      minute: user.createdAt.getMinutes(),
-      second: user.createdAt.getSeconds()
-    }
-
     let dateOptions = {
       year: 'numeric',
-      month: 'long',
+      month: '2-digit',
       day: '2-digit',
-      weekday: 'short',
-      hourCycle: 'h23'
+      hourCycle: 'h23',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
     };
 
-    const userCreatedFormated = `${userCreated.day}/${userCreated.month}/${userCreated.year} - ${userCreated.hour}:${userCreated.minute}`;
+    const userCreated = new Date(user.createdAt).toLocaleDateString('pt-BR', dateOptions)
+
+    const userCreatedFormated =
+    `${user.createdAt.getDate()}/${user.createdAt.getMonth()}/${user.createdAt.getFullYear()} - ${user.createdAt.getHours()}:${user.createdAt.getMinutes()}`;
 
     const userTime = new Date(dateNow - user.createdAt);
 
@@ -53,7 +48,7 @@ module.exports = {
         {name: '🆔 Discord ID', value: `${user.id}`, inline: true},
         {
           name: '📅 Conta criada em',
-          value: `${userCreatedFormated} \n${userTimeFormated}`,
+          value: `${userCreated} \n${userTimeFormated}`,
           inline: true
         }
       );
