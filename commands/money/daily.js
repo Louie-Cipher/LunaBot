@@ -8,12 +8,6 @@ module.exports = {
 
   async execute(client, message, args) {
 
-    let failEmbed = new Discord.MessageEmbed()
-      .setColor('#b3c20c')
-      .setTitle('Ei, você já resgatou sua reconpensa hoje!')
-      .setDescription('⏳🌙 Volte amanhã para resgatar mais LunaBits')
-      .setFooter('OBS: se você começou a usar a Luna hoje,\ndeve esperar até amanhã para resgatar sua recompensa');
-
     var randomCoins = Math.floor(Math.random() * 150) + 150;
 
     let profileCheck = await profileModel.findOne({userID: message.author.id});
@@ -21,8 +15,13 @@ module.exports = {
 
     let lastDaily = new Date(profileCheck.lastDaily);
 
-    if (lastDaily.getDate() == dateNow.getDate() && lastDaily < 183600 )
-      return message.channel.send(failEmbed);
+    if (lastDaily.getDate() == dateNow.getDate() || lastDaily < 183600 )
+      return message.channel.send({embed: {
+        color: '#b3c20c',
+        title: 'Ei, você já resgatou sua reconpensa hoje!',
+        description: '⏳🌙 Volte amanhã para resgatar mais LunaBits',
+        footer: { text: 'OBS: se você começou a usar a Luna hoje,\ndeve esperar até amanhã para resgatar sua recompensa' }
+      }});
 
     let profileData = await profileModel.findOneAndUpdate(
       {
