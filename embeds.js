@@ -8,11 +8,9 @@ module.exports = {
       .setColor('#00a1a1')
       .setTitle('🌙 Olá, eu sou a Luna')
       .setDescription(
-        `um bot experimental com mini jogos e player de música,
-        criado pela Louie.
-        Meu prefixo padrão é ' (aspas simples)
-        Meu prefixo nesse servidor é ${prefix}
-        para saber mais informações, use ${prefix}help`);
+        `um bot experimental com mini jogos, player de música e muito mais.
+        Meu prefixo padrão é ' (aspas simples). Meu prefixo nesse servidor é ${prefix}
+        para mais informações, use ${prefix}help`);
 
     message.channel.send(lunaHelloEmbed);
   },
@@ -25,13 +23,17 @@ module.exports = {
     .setColor('#ffff00')
     .setDescription('🔊 você precisa estar em um canal de voz para usar esse comando'),
 
+  diferentVoiceChannel: new Discord.MessageEmbed()
+    .setColor('#ffff00')
+    .setDescription('🔊 você precisa estar no mesmo canal de voz que eu para usar esse comando'),
+
   nsfw: new Discord.MessageEmbed()
     .setColor('#ff0000')
     .setTitle('❎ esse comando só pode ser usado em um canal marcado como NSFW')
     .setImage('https://i.kym-cdn.com/entries/icons/original/000/033/758/Screen_Shot_2020-04-28_at_12.21.48_PM.png')
     .setFooter('De acordo com as diretrizes do Discord, mensagens que possuirem conteúdo explícito, ou NSFW (Not Safe For Work), só podem ser enviados em um canal marcado como de conteúdo adulto'),
 
-  async userPermission(client, message, cmd) {
+  async userPermission(message, cmd) {
     const userPermissionEmbed = new Discord.MessageEmbed()
       .setColor('#ff0000')
       .setTitle('Você é fraco, lhe falta permissão para usar esse comando')
