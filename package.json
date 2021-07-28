@@ -1,5 +1,5 @@
 {
-  "name": "BotTutorial",
+  "name": "lunabot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -22,6 +22,6 @@
     "ffmpeg-static": "^4.3.0",
     "fluent-ffmpeg": "^2.1.2",
     "mongoose": "^5.13.3",
-    "ytdl-core": "^4.8.2"
+    "ytdl-core": "^4.9.0"
   }
 }
