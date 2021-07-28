@@ -244,7 +244,7 @@ client.on("voiceStateUpdate", function(oldMember, newMember) {
 
       require('./voicexp').voiceXpAdd(client);
 
-      await delay(1000 * 60);
+      await delay(1000 * 60 * 5);
     }
   }
 

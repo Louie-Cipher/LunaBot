@@ -5,7 +5,7 @@ module.exports = {
 
     console.log('-- adcionando Voice XP --');
 
-    let randomVoiceXP = Math.ceil(Math.random() * 3) + 3;
+    let randomVoiceXP = Math.ceil(Math.random() * 3) + 2;
 
     let guildsCache = client.guilds.cache;
 
