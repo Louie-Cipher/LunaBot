@@ -7,7 +7,9 @@ module.exports = {
 
   async execute(client, message, args) {
     var emojis = [
-      '<:Huggies:838853996420399134>'
+       '<:hug0:870012069779472415>',
+      '<a:hug1:838853921106952202>',
+      '<a:hug2:870011641306181633>'
     ];
 
     var gifs = [
@@ -17,7 +19,7 @@ module.exports = {
       'https://i.giphy.com/media/16bJmyPvRbCDu/source.gif | Disney', // Jude e Nick
       'https://64.media.tumblr.com/tumblr_m0sudr4KLk1rrdywqo1_500.gif | Universal Studio / Illumination', // Minions
       'https://media1.tenor.com/images/a71b123666e08bb6ad336cd1625c0cdb/tenor.gif | Walt Disney', // Tigrão e Pooh
-      'https://media1.tenor.com/images/8a4db61a1017d08731713cb112288926/tenor.gif | The Pokemon Company / Nintendo', // Pikachu e Piplup
+      'https://media1.tenor.com/images/8a4db61a1017d08731713cb112288926/tenor.gif | The Pokémon Company', // Pikachu e Piplup
       'https://media1.tenor.com/images/11b756289eec236b3cd8522986bc23dd/tenor.gif | Disney / Pixar', // Sully e Boo
       'https://media1.tenor.com/images/d7529f6003b20f3b21f1c992dffb8617/tenor.gif | Disney / Marvel', // Baymax e Hiro
       'https://media1.tenor.com/images/95b41ae72f201a5389a78ccfdf2e6657/tenor.gif | Disney',  // Elsa e Anna
