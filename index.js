@@ -27,7 +27,7 @@ for (const subFolder of mainFolderCommands) {
     client.commands.set(cmd.name, cmd);
   }
 
-}
+};
 
 /*client.events = new Discord.Collection();
 
@@ -53,13 +53,13 @@ client.on('message', async message => {
 
 });
 
-/*client.on("voiceStateUpdate", function(oldMember, newMember) {
+client.on("voiceStateUpdate", function(oldMember, newMember) {
 
   var newChannel = newMember.channel;
 
-});*/
-
-/*function delay(ms) {
+});
+/*
+function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
@@ -73,6 +73,6 @@ async function voiceXPloop(client) {
   }
 }
 
-voiceXPloop(client);*/
-
+voiceXPloop(client);
+*/
 client.login(process.env.token_bot);
