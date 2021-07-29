@@ -33,7 +33,8 @@ module.exports = {
 
     if (!mentioned) return message.reply('você precisa mencionar alguém para abraçar');
 
-    let avatar_autor = message.author.displayAvatarURL({ format: 'png' });
+    message.react(emojiRand);
+
     const embed = new Discord.MessageEmbed()
       .setColor('#5BCEFA')
       .setDescription(` ${emoji_rand} ${message.author} abraçou ${mentioned}`)

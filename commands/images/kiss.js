@@ -30,6 +30,8 @@ module.exports = {
       return message.reply('você precisa mencionar alguém para beijar');
     }
 
+    message.react(emojiRand);
+
     const embed = new Discord.MessageEmbed()
       .setColor('#F5A9B8')
       .setDescription(` ${emojiRand} • ${message.author} beijou ${mentioned}`)
