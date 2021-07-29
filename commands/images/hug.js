@@ -26,9 +26,9 @@ module.exports = {
       'https://media1.tenor.com/images/3881659d9537b73c8ee950ca3b074e13/tenor.gif | Studio Ghibli' //Ponyo e Saske
     ];
 
-    var emoji_rand = emojis[Math.floor(Math.random() * emojis.length)];
-    var gif_rand = gifs[Math.floor(Math.random() * gifs.length)];
-    let gifAndCopyright = gif_rand.split('|')
+    var emojiRand = emojis[Math.floor(Math.random() * emojis.length)];
+    var gifRand = gifs[Math.floor(Math.random() * gifs.length)];
+    let gifAndCopyright = gifRand.split('|')
     let mentioned = message.mentions.users.first() || client.users.cache.get(args[0]);
 
     if (!mentioned) return message.reply('você precisa mencionar alguém para abraçar');
@@ -37,7 +37,7 @@ module.exports = {
 
     const embed = new Discord.MessageEmbed()
       .setColor('#5BCEFA')
-      .setDescription(` ${emoji_rand} ${message.author} abraçou ${mentioned}`)
+      .setDescription(` ${emojiRand} ${message.author} abraçou ${mentioned}`)
       .setImage(gifAndCopyright[0])
       .setFooter('©'+gifAndCopyright[1]);
 
