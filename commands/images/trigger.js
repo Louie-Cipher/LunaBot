@@ -9,11 +9,17 @@ module.exports = {
 
   async execute(client, message, args) {
 
-    let user = message.mentions.users.first() || message.author;
+    let user = message.mentions.users.first() || client.users.cache.get(args[0])
+
+    if (args[0] && !user) return message.reply({ content: 'usuário informado não encontrado' });
+    if (!user) user = message.author;
+
     let avatar = user.displayAvatarURL({ dynamic: false, format: 'png' });
     let image = await canvacord.Canvas.trigger(avatar);
+
     let attachment = new Discord.MessageAttachment(image, `triggered.gif`);
-    message.channel.send(attachment);
+
+    message.reply({ files: [attachment] });
 
   }
 }
