@@ -6,29 +6,32 @@ module.exports = {
   description: "testa a Latência do bot",
   dmAllow: true,
 
-  async execute(client, message, args) {
-    const msg = await message.channel.send({embed: {
-    color: 39423,
-    title: "Ping"
-    }});
+  /**
+   * @param {Discord.Client} client 
+   * @param {Discord.Client} message 
+   * @param {String[]} args 
+   */
 
-    let embed = new Discord.MessageEmbed()
-      .setColor('#00ff00')
-      .setTitle('🏓 **| Pong!**')
-      .addFields(
-        {name:'Latência do Server:', value:`${msg.createdTimestamp -
-      message.createdTimestamp}ms`},
-      {name: 'Latência da API:', value: `${Math.round(client.ws.ping)}ms` }
-      );
-      
-    msg.edit({embed: {
-      title: '🏓 | Pong!',
-      color: 39423,
-      fields: [
-        {name:'Latência do Server:', value:`${msg.createdTimestamp -
-      message.createdTimestamp}ms`},
-      {name: 'Latência da API:', value: `${Math.round(client.ws.ping)}ms` }]
-    }});
-    
+  async execute(client, message, args) {
+    const msg = await message.reply({
+      embeds: [{
+        color: 39423,
+        title: "Ping"
+      }]
+    });
+
+    msg.edit({
+      embeds: [{
+        title: '🏓 | Pong!',
+        color: 39423,
+        fields: [
+          {
+            name: 'Latência do Server:', value: `${msg.createdTimestamp -
+              message.createdTimestamp}ms`
+          },
+          { name: 'Latência da API:', value: `${Math.round(client.ws.ping)}ms` }]
+      }]
+    });
+
   }
 }
