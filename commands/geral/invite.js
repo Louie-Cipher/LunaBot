@@ -16,7 +16,7 @@ module.exports = {
       .setDescription(`Para adcionar a LunaBot em seu servidor [clique aqui](${oauthlink})
       \nCaso deseje, acesse também o servidor de suporte e demais interações da Luna: [LunaLab](https://discord.gg/VFJAqE7Uz6)`);
 
-    message.channel.send(embed);
+    message.reply({ embeds: [embed] });
 
   }
 }
