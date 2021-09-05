@@ -1,8 +1,16 @@
-node_modules
-build
-npm-debug.log
+#🤫 segredos 🐱‍👤 (variáveis de ambiente)
 .env
-.DS_Store
-.vscode
+
+#para adcionar novos comandos de /
+addCommands.js
+
+#coisas do nodejs
+node_modules
 package-lock.json
+
+#coisas do VScode
+.vscode
+
+#coisas aleatórias da Louie
 examples
+old
