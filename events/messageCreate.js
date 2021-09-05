@@ -11,10 +11,11 @@ let guildLang = '';
 
 /**
  * @param {Discord.Client} client 
- * @param {Discord.Message} message 
+ * @param {Discord.Message} message
+ * @param {Discord.Collection} commands
  */
 
-module.exports = async (client, message) => {
+module.exports = async (client, message, commands) => {
 
     if (message.author.bot) return;
 
@@ -136,7 +137,7 @@ module.exports = async (client, message) => {
         args.shift();
     }
 
-    const cmd = client.commands.get(cmdName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
+    const cmd = commands.get(cmdName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
     if (!cmd) return message.reply({content: `\`${cmdName}\` não é um comando válido.`});
 
