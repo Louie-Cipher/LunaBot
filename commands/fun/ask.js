@@ -10,7 +10,7 @@ module.exports = {
 
     var rand = Math.floor(Math.random() * 20);
 
-    if (rand == 1) {
+    if (rand == 0) {
       var embedcolor = '#800000'
       var resposta = 'NÃO MESMO!'
       var description = 'de forma alguma'
@@ -39,7 +39,7 @@ module.exports = {
 
 
 
-    if (!args[0]) return message.reply(`escreva sua pergunta após o comando, e eu responderei com minha imensa sabedoria.`)
+    if (!args[0]) return message.reply({ content: `escreva sua pergunta após o comando, e eu responderei com minha imensa sabedoria.` })
 
     const embed = new Discord.MessageEmbed()
       .setColor(embedcolor)
@@ -47,7 +47,7 @@ module.exports = {
       .setDescription(description)
 
 
-    message.channel.send(embed);
+    message.reply({ embeds: [embed] });
 
 
   }

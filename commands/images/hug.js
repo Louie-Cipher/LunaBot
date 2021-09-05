@@ -7,7 +7,7 @@ module.exports = {
 
   async execute(client, message, args) {
     var emojis = [
-       '<:hug0:870012069779472415>',
+      '<:hug0:870012069779472415>',
       '<a:hug1:838853921106952202>',
       '<a:hug2:870011641306181633>'
     ];
@@ -31,7 +31,7 @@ module.exports = {
     let gifAndCopyright = gifRand.split('|')
     let mentioned = message.mentions.users.first() || client.users.cache.get(args[0]);
 
-    if (!mentioned) return message.reply('você precisa mencionar alguém para abraçar');
+    if (!mentioned) return message.reply({ content: 'você precisa mencionar alguém para abraçar' });
 
     message.react(emojiRand);
 
@@ -39,10 +39,10 @@ module.exports = {
       .setColor('#5BCEFA')
       .setDescription(` ${emojiRand} ${message.author} abraçou ${mentioned}`)
       .setImage(gifAndCopyright[0])
-      .setFooter('©'+gifAndCopyright[1]);
+      .setFooter('©' + gifAndCopyright[1]);
 
-    if(mentioned.id == client.user.id) embed.addFields({name: '\u200b', value: 'obrigada pelo abraço 🥰'})
+    if (mentioned.id == client.user.id) embed.addFields({ name: '\u200b', value: 'obrigada pelo abraço 🥰' })
 
-    await message.channel.send(embed);
+    message.reply({ embeds: [embed] });
   }
 }

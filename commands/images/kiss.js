@@ -26,9 +26,7 @@ module.exports = {
     let gifAndCopyright = gifRand.split('|')
     let mentioned = message.mentions.users.first() || client.users.cache.get(args[0]);
 
-    if (!mentioned) {
-      return message.reply('você precisa mencionar alguém para beijar');
-    }
+    if (!mentioned) return message.reply({ content: 'você precisa mencionar alguém para abraçar' });
 
     message.react(emojiRand);
 
@@ -40,6 +38,6 @@ module.exports = {
 
     if(mentioned.id == client.user.id) embed.addFields({name: '\u200b', value: '😳 estou envergonhada 👉👈'})
 
-    await message.channel.send(embed);
+    message.reply({ embeds: [embed] });
   }
 }
