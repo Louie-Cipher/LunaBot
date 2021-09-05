@@ -15,10 +15,11 @@
   },
   "keywords": [
     "discord.js",
-    "discordbot"
+    "discordbot",
+    "bot"
   ],
   "author": "LouieCipher",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Louie-Cipher/LunaBot/issues"
   },
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
+    "@discordjs/opus": "^0.5.3",
     "@discordjs/rest": "^0.1.0-canary.0",
     "canvacord": "^5.2.3",
     "canvas": "^2.8.0",
@@ -35,6 +37,7 @@
     "discord-player": "^5.1.0",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
+    "ffmpeg-static": "^4.4.0",
     "mongoose": "^6.0.4",
     "systeminformation": "^5.8.7",
     "ytdl-core": "^4.9.1"
