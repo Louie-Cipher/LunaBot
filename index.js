@@ -1,78 +1,122 @@
 const Discord = require('discord.js');
-const DisTube = require('distube');
-const disbutton = require('discord-buttons');
+const { Player } = require('discord-player');
 const fs = require('fs');
 require('dotenv').config();
+const prefix = "'";
 
-var prefix = "'";
+const client = new Discord.Client({
+    intents: 8191
+});
 
-const client = new Discord.Client({ partials: ['CHANNEL', 'MESSAGE', 'GUILD_MEMBER', 'REACTION'] });
-disbutton(client);
-client.distube = new DisTube(client, { searchSongs: false, emitNewSongOnly: true, leaveOnFinish: true });
+client.player = new Player(client, {
+    leaveOnEnd: false,
+    leaveOnStop: true,
+    leaveOnEmpty: false,
+    leaveOnEmptyCooldown: 60 * 1000,
+    autoSelfDeaf: true
+});
 
-require('./mongoose').init();
+try {
+    require('./playerEvents')(client.player);
+}
+catch (error) {
+    console.error(error);
+}
 
-require('./distubeEvents').events(client.distube);
+try {
+    require('./mongoose').init();
+}
+catch (error) {
+    console.error(error);
+}
 
-client.commands = new Discord.Collection();
+let commands = new Discord.Collection();
 
-const mainFolderCommands = fs.readdirSync('./commands');
+const mainCommandsFolder = fs.readdirSync('./commands');
 
-for (const subFolder of mainFolderCommands) {
+for (const subFolder of mainCommandsFolder) {
+    if (subFolder.includes('music')) continue;
+    let categoryFolder = fs.readdirSync(`./commands/${subFolder}`).filter(file => file.endsWith('.js'));
 
-  let categoryFolder = fs.readdirSync(`./commands/${subFolder}`);
-
-  for (const file of categoryFolder) {
-    let cmd = require(`./commands/${subFolder}/${file}`);
-    client.commands.set(cmd.name, cmd);
-  }
-
+    for (const file of categoryFolder) {
+        let cmd = require(`./commands/${subFolder}/${file}`);
+        commands.set(cmd.name, cmd);
+    }
 };
 
-/*client.events = new Discord.Collection();
+let slashCommands = new Discord.Collection();
 
-const eventsFolder =  fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+const slashCommandsFolder = fs.readdirSync('./slashCommands');
 
-eventsFolder.forEach(file => {
+for (const subFolder of slashCommandsFolder) {
 
-  let event = require(`./events/${file}`);
- 
-  client.events.set(event.name, event)
+    let categoryFolder = fs.readdirSync(`./slashCommands/${subFolder}`).filter(file => file.endsWith('.js'));
 
-});*/
+    for (const file of categoryFolder) {
+        let cmd = require(`./slashCommands/${subFolder}/${file}`);
+        slashCommands.set(cmd.data.name, cmd);
+    }
+};
+
+const dateNow = new Date();
 
 client.on('ready', async () => {
 
-  require('./events/ready').eventTrigger(client);
+    console.log('|      Comandos      |Status|');
+    commands.forEach(cmd => {
+        console.log(
+            '\x1b[4m%s\x1b[0m', '| ' + cmd.name + (' '.repeat(20 - cmd.name.length)) + '| ✅ |'
+        )
+    });
+    console.log(`\n|| ${client.user.tag} online! ||`);
+
+    const activities = [
+        `Olá, eu sou a Luna. um bot experimental criado pela Louie`,
+        `para ver uma lista com todas as minhas funcionalidades, digite ${prefix}help ou /`,
+        `Você sabia que eu sou Open Source? 👩‍💻 confira meu código em https://github.com/Louie-Cipher/LunaBot`
+    ];
+
+    let i = 0;
+    setInterval(() => {
+
+        client.user.setActivity(`${activities[i]}`, { type: 'PLAYING' });
+        i++;
+        if (i == 3) { i = 0 }
+
+    }, 1000 * 20);
+
+    setInterval(
+        () =>
+            require('./extra/voicexp')(client),
+        1000 * 60 * 5
+    );
 
 });
 
-client.on('message', async message => {
+client
+    .on('messageCreate', async message => {
+        try {
+            require('./events/messageCreate')(client, message, commands);
+        } catch (error) {
+            console.error(error)
+        }
+    })
+    .on('interactionCreate', async interaction => {
+        try {
+            require('./events/interactionCreate')(client, interaction, slashCommands);
+        } catch (error) {
+            console.error(error)
+        }
+    })
+    .on('guildCreate', async guild => {
+        try {
+            require('./events/guildCreate')(client, guild);
+        } catch (error) {
+            console.error(error)
+        }
+    })
+    .on('error', async error => {
+        console.error(error)
+    });
 
-  require('./events/message').eventTrigger(client, message);
-
-});
-
-client.on("voiceStateUpdate", function(oldMember, newMember) {
-
-  var newChannel = newMember.channel;
-
-});
-/*
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-async function voiceXPloop(client) {
-  while (true) {
-
-    await delay(1000 * 15);
-
-    require('./voicexp').voiceXpAdd(client);
-    
-  }
-}
-
-voiceXPloop(client);
-*/
-client.login(process.env.token_bot);
+client.login(process.env['BOT_TOKEN']);
