@@ -1,27 +1,40 @@
 {
   "name": "lunabot",
   "version": "1.0.0",
-  "description": "",
+  "description": "an experimental discord bot",
   "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Louie-Cipher/LunaBot.git"
+  },
+  "keywords": [
+    "discord.js",
+    "discordbot"
+  ],
+  "author": "LouieCipher",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Louie-Cipher/LunaBot/issues"
+  },
+  "homepage": "https://github.com/Louie-Cipher/LunaBot#readme",
+  "engines": {
+    "node": "16.6.0"
+  },
   "dependencies": {
-    "@discordjs/opus": "^0.5.0",
-    "canvacord": "^5.2.1",
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "canvacord": "^5.2.3",
     "canvas": "^2.8.0",
-    "discord-buttons": "^4.0.0",
-    "discord.js": "^12.5.3",
-    "distube": "^2.8.15",
+    "discord-api-types": "^0.22.0",
+    "discord-player": "^5.1.0",
+    "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "ffmpeg": "0.0.4",
-    "ffmpeg-static": "^4.3.0",
-    "fluent-ffmpeg": "^2.1.2",
-    "mongoose": "^5.13.3",
-    "ytdl-core": "^4.9.0"
+    "systeminformation": "^5.8.7"
   }
 }
