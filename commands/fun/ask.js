@@ -8,47 +8,39 @@ module.exports = {
 
   async execute(client, message, args) {
 
-    var rand = Math.floor(Math.random() * 20);
+    if (!args[0]) return message.reply({ content: 'escreva sua pergunta após o comando, e eu responderei com minha imensa sabedoria de bot' });
+
+    const rand = Math.floor(Math.random() * 20);
+
+    let embed = new Discord.MessageEmbed()
 
     if (rand == 0) {
-      var embedcolor = '#800000'
-      var resposta = 'NÃO MESMO!'
-      var description = 'de forma alguma'
+      embed.setColor('#800000')
+        .setTitle('NÃO MESMO!')
+        .setDescription('de forma alguma');
     }
-    else if (rand > 1 && rand < 10) {
-      var embedcolor = '#ff0000'
-      var resposta = 'NÃO'
-      var description = 'negativo'
+    else if (rand > 0 && rand < 10) {
+      embed.setColor('#ff0000')
+        .setTitle('NÃO')
+        .setDescription('negativo');
     }
     else if (rand == 10) {
-      var embedcolor = '#ffff00'
-      var resposta = 'TALVEZ...'
-      var description = 'essa me deixou em dúvida.'
+      embed.setColor('#ffff00')
+        .setTitle('TALVEZ...')
+        .setDescription('essa me deixou em dúvida 🤔');
     }
     else if (rand > 10 && rand < 19) {
-      var embedcolor = '#00ff00'
-      var resposta = 'SIM'
-      var description = 'positivo'
-
+      embed.setColor('#00ff00')
+        .setTitle('SIM')
+        .setDescription('isso mesmo');
     }
     else if (rand == 19) {
-      var embedcolor = '#00ff00'
-      var resposta = 'COM CERTEZA!'
-      var description = 'pode apostar que sim'
+      embed.setColor('#00ff00')
+        .setTitle('COM CERTEZA!')
+        .setDescription('pode apostar que sim');
     }
 
-
-
-    if (!args[0]) return message.reply({ content: `escreva sua pergunta após o comando, e eu responderei com minha imensa sabedoria.` })
-
-    const embed = new Discord.MessageEmbed()
-      .setColor(embedcolor)
-      .setTitle(`**${resposta}**`)
-      .setDescription(description)
-
-
     message.reply({ embeds: [embed] });
-
 
   }
 }
