@@ -139,9 +139,9 @@ module.exports = {
                 (interaction.user.id == player1.id && interaction.user.id == player2.id)
             ) return;
 
-            if (numbers.includes(interaction.customId) && playerRound.id == interaction.user.id) {
+            await interaction.deferReply({ ephemeral: false });
 
-                await interaction.deferReply({ ephemeral: false });
+            if (numbers.includes(interaction.customId) && playerRound.id == interaction.user.id) {
 
                 if (round % 2 != 0) playerEmoji = '❎';
                 else playerEmoji = '⭕';
@@ -151,11 +151,14 @@ module.exports = {
                 emojis.delete(jogada);
                 emojis.set(jogada, playerEmoji);
 
+                let otherPlayer = player1;
+                if (playerRound.id == player1.id) otherPlayer = player2
+
                 let roundEmbed = new Discord.MessageEmbed()
                     .setColor('#00ffff')
                     .setTitle('⭕ Jogo da Velha ❎')
                     .setDescription('Para jogar, clique nos botões abaixo')
-                    .addField('vez de', playerRound.toString());
+                    .addField('vez de', otherPlayer.toString());
 
                 let newLine1 = new Discord.MessageActionRow();
                 let newLine2 = new Discord.MessageActionRow();
@@ -216,12 +219,7 @@ module.exports = {
                     [emoji3, emoji5, emoji7].every(emoji => emoji != empty && emoji == emoji3)
                 ) {
 
-                    let otherPlayer = player1;
-
-                    if (playerRound.id == player1.id) {
-                        vitoriasP1++;
-                        otherPlayer = player2
-                    }
+                    if (playerRound.id == player1.id) vitoriasP1++;
                     else vitoriasP2++
 
                     let resultEmbed = new Discord.MessageEmbed()
@@ -317,8 +315,6 @@ module.exports = {
             }
             else if (interaction.customId == 'again' && !playAgain.includes(interaction.user.id)) {
 
-                await interaction.deferReply({ ephemeral: false });
-
                 playAgain.push(interaction.user.id);
                 let otherPlayer = player1;
                 if (interaction.user.id == player1.id) otherPlayer = player2
@@ -327,27 +323,12 @@ module.exports = {
                     content: `Okay ${interaction.user}, você votou para jogar mais uma partida. esperando ${otherPlayer} votar`
                 });
 
-
                 //resetar valores da partida
                 playAgain = [];
                 round = 1;
-                i = 1;
                 numbers.forEach(number => {
-                    let line;
-                    if (i >= 1 && i <= 3) line = line1
-                    else if (i >= 4 && i <= 6) line = line2
-                    else line = line3;
-
-                    line.addComponents(
-                        new Discord.MessageButton()
-                            .setCustomId(number)
-                            .setLabel(empty)
-                            .setStyle('PRIMARY')
-                    );
-
+                    emojis.delete(number);
                     emojis.set(number, empty);
-
-                    i++
                 });
 
                 partidas++
