@@ -4,8 +4,8 @@ const profileModel = require('../../mongoSchema/profile');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('jokenpo')
-        .setDescription('joga uma partida de pedra papel tesoura')
+        .setName('coinflip')
+        .setDescription('joga cara ou coroa')
         .addIntegerOption(option =>
             option.setName('valor')
                 .setDescription('caso deseje apostar, informe o valor')
@@ -45,26 +45,21 @@ module.exports = {
 
         let startEmbed = new Discord.MessageEmbed()
             .setColor('#00ffff')
-            .setTitle('Pedra 🪨 papel 📃 tesoura ✂')
+            .setTitle('Cara ou coroa')
             .setDescription('Para jogar, clique nos botões abaixo');
 
         let startButtons = new Discord.MessageActionRow()
             .addComponents(
                 new Discord.MessageButton()
-                    .setCustomId('pedra')
-                    .setLabel('pedra')
-                    .setEmoji('🪨')
+                    .setCustomId('cara')
+                    .setLabel('cara')
+                    .setEmoji('👤')
                     .setStyle('PRIMARY'),
                 new Discord.MessageButton()
-                    .setCustomId('papel')
-                    .setLabel('papel')
-                    .setEmoji('📃')
+                    .setCustomId('coroa')
+                    .setLabel('coroa')
+                    .setEmoji('👑')
                     .setStyle('PRIMARY'),
-                new Discord.MessageButton()
-                    .setCustomId('tesoura')
-                    .setLabel('tesoura')
-                    .setEmoji('✂')
-                    .setStyle('PRIMARY')
             );
 
         await interaction.editReply({
@@ -74,25 +69,31 @@ module.exports = {
 
         let gameMessage = await interaction.fetchReply();
 
-        const values = ['pedra', 'papel', 'tesoura'];
+        const values = ['cara', 'coroa'];
         const emojis = ['🪨', '📃', '✂'];
 
         let rounds = 0;
         let vitorias = 0;
         let derrotas = 0;
-        let empates = 0;
-        let ganhos = 0;
+        let lucro = 0;
 
         let cooldown = false;
 
         let vitoriaPercent = '';
         let derrotaPercent = '';
-        let empatePercent = '';
 
-        client.on('interactionCreate', async buttonInteraction => {
+        let collector = gameMessage.createMessageComponentCollector({
+            filter: int => int.user.id === interaction.user.id
+        });
+
+        collector.on('collect', async buttonInteraction => {
+            if (!buttonInteraction.isButton()) return;
 
             if (!buttonInteraction.isButton() || buttonInteraction.message.id != gameMessage.id || buttonInteraction.user.id != interaction.user.id)
                 return;
+
+            if (aposta === true && lucro * -1 > profileData.coins)
+                return buttonInteraction.reply({ content: 'Você não possui mais saldo suficiente para continuar essa aposta', ephemeral: true });
 
             await buttonInteraction.deferReply({ ephemeral: false });
 
@@ -112,7 +113,7 @@ module.exports = {
             const playerValue = values[player];
             const playerEmoji = emojis[player];
 
-            const bot = Math.floor(Math.random() * 3);
+            const bot = Math.round(Math.random());
 
             const botValue = values[bot];
             const botEmoji = emojis[bot];
@@ -120,26 +121,16 @@ module.exports = {
             let resultEmbed = new Discord.MessageEmbed()
                 .setTitle('Pedra 🪨 papel 📃 tesoura ✂');
 
-            let description = `Você jogou ${playerValue} ${playerEmoji}\nEu joguei ${botValue} ${botEmoji}\n\n`
+            let description = `Você escolheu ${playerValue} ${playerEmoji}\nO resultado foi ${botValue} ${botEmoji}\n\n`
 
             if (playerValue == botValue) {
-                empates++
-                resultEmbed.setColor('YELLOW');
-                description += 'Foi um empate! 🤝';
-                if (aposta === true) description += `\nVocê não ganhou nem perdeu seus ${betValue} loops`;
-
-            } else if (
-                (playerValue == 'pedra' && botValue == 'tesoura') ||
-                (playerValue == 'papel' && botValue == 'pedra') ||
-                (playerValue == 'tesoura' && botValue == 'papel')
-            ) {
                 vitorias++
-                ganhos += betValue;
+                lucro += betValue;
                 resultEmbed.setColor('GREEN');
-                description += `🎉 Parabéns ${interaction.user}, você venceu!\n\n😭 Infelizmente, eu perdi`;
+                description += `🎉 Parabéns ${interaction.user}, você venceu!`;
 
                 if (aposta === true) {
-                    description += `\n\nVocê ganhou ${betValue} loops`;
+                    description += `\nVocê ganhou ${betValue} loops`;
 
                     let profileUpdate = await profileModel.findOneAndUpdate({ userID: interaction.user.id }, {
                         $inc: { coins: betValue }
@@ -150,12 +141,12 @@ module.exports = {
             } else {
 
                 derrotas++
-                ganhos -= betValue;
+                lucro -= betValue;
                 resultEmbed.setColor('RED');
-                description += `😭 Sinto muito ${interaction.user}, você perdeu...\n\n🎉 Eba, eu venci!`
+                description += `😭 Sinto muito ${interaction.user}, você perdeu...`;
 
                 if (aposta === true) {
-                    description += `\n\nVocê perdeu ${betValue} loops`;
+                    description += `\nVocê perdeu ${betValue} loops`;
 
                     let profileUpdate = await profileModel.findOneAndUpdate({ userID: interaction.user.id }, {
                         $inc: { coins: -betValue }
@@ -167,28 +158,28 @@ module.exports = {
 
             vitoriaPercent = ((vitorias * 100) / rounds).toFixed(2);
             derrotaPercent = ((derrotas * 100) / rounds).toFixed(2);
-            empatePercent = ((empates * 100) / rounds).toFixed(2);
             while (vitoriaPercent.endsWith('0')) vitoriaPercent = vitoriaPercent.slice(0, -1);
             while (derrotaPercent.endsWith('0')) derrotaPercent = derrotaPercent.slice(0, -1);
-            while (empatePercent.endsWith('0')) empatePercent = empatePercent.slice(0, -1);
             if (vitoriaPercent.endsWith('.')) vitoriaPercent = vitoriaPercent.slice(0, -1);
             if (derrotaPercent.endsWith('.')) derrotaPercent = derrotaPercent.slice(0, -1);
-            if (empatePercent.endsWith('.')) empatePercent = empatePercent.slice(0, -1);
 
             resultEmbed
                 .setDescription(description)
                 .addFields(
-                    { name: 'partidas', value: rounds.toString() },
+                    { name: 'partidas', value: rounds.toString(), inline: true },
                     { name: 'vitórias', value: `${vitorias} • ${vitoriaPercent}%`, inline: true },
-                    { name: 'derrotas', value: `${derrotas} • ${derrotaPercent}%`, inline: true },
-                    { name: 'empates', value: `${empates} • ${empatePercent}%`, inline: true }
+                    { name: 'derrotas', value: `${derrotas} • ${derrotaPercent}%`, inline: true }
                 );
 
-            if (aposta === true) resultEmbed.addField('lucro / prejuízo', ganhos.toString());
+            if (aposta === true && betValue != NaN) {
+                resultEmbed
+                    .addField('lucro / prejuízo', `${lucro} loops`, true)
+                    .setFooter('Para mudar o valor da aposta,\né necessário começar outro jogo');
+            }
 
             gameMessage.edit({
-                embeds: [resultEmbed],
-            });
+                embeds: [resultEmbed]
+            })
 
             buttonInteraction.deleteReply();
 
