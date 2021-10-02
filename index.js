@@ -10,7 +10,7 @@ const client = new Discord.Client({
 let skipVote = new Discord.Collection();
 let musicMessages = new Discord.Collection();
 
-module.exports = { client, player, distube, skipVote, musicMessages }
+module.exports = { client }
 
 try {
     require('./mongoose').init();
