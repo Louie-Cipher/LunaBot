@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const { Player } = require('discord-player');
 const fs = require('fs');
 require('dotenv').config();
 const prefix = "'";
@@ -8,7 +7,7 @@ const client = new Discord.Client({
     intents: 8191
 });
 
-client.player = new Player(client, {
+const player = new Player(client, {
     leaveOnEnd: false,
     leaveOnStop: true,
     leaveOnEmpty: false,
@@ -16,12 +15,10 @@ client.player = new Player(client, {
     autoSelfDeaf: true
 });
 
-try {
-    require('./playerEvents')(client.player);
-}
-catch (error) {
-    console.error(error);
-}
+let skipVote = new Discord.Collection();
+let musicMessages = new Discord.Collection();
+
+module.exports = { client, player, distube, skipVote, musicMessages }
 
 try {
     require('./mongoose').init();
@@ -32,7 +29,7 @@ catch (error) {
 
 let commands = new Discord.Collection();
 
-const mainCommandsFolder = fs.readdirSync('./commands');
+const mainCommandsFolder = fs.readdirSync('./commands').filter(file => file != 'info.json');
 
 for (const subFolder of mainCommandsFolder) {
     if (subFolder.includes('music')) continue;
@@ -57,8 +54,6 @@ for (const subFolder of slashCommandsFolder) {
         slashCommands.set(cmd.data.name, cmd);
     }
 };
-
-const dateNow = new Date();
 
 client.on('ready', async () => {
 
