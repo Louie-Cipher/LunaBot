@@ -3,167 +3,98 @@ const fs = require('fs');
 const guildModel = require('../../mongoSchema/guild');
 
 module.exports = {
-  name: 'help',
-  aliases: ['ajuda', 'commands', 'comandos', 'cmds', 'info'],
-  description: "mostra todos os meus comandos e a descrição deles, ou seja, esse comando 😉 (quebra da 4° parede?)",
-  dmAllow: true,
+    name: 'help',
+    aliases: ['ajuda', 'commands', 'comandos', 'cmds', 'info'],
+    description: "mostra todos os meus comandos e a descrição deles, ou seja, esse comando 😉 (quebra da 4° parede?)",
+    dmAllow: true,
 
-  async execute(client, message, args) {
+    /**
+     * @param {Discord.Client} client 
+     * @param {Discord.Message} message 
+     * @param {String[]} args 
+     */
 
-    const funNames = ['fun', 'diversão', 'jogos', 'games', 'game'];
-    const geralNames = ['geral', 'util', 'utilidades', 'general'];
-    const imagesNames = ['images', 'imagens', 'img', 'imgs', 'memes'];
-    const modNames = ['mod', 'moderação', 'moderacao', 'config', 'adm', 'admin', 'administração', 'administracao'];
-    const moneyNames = ['money', 'dinheiro', 'economia', 'lunaBits', 'bits'];
-    const musicNames = ['music', 'música', 'musica', 'player', 'play'];
+    async execute(client, message, args) {
 
-    let embed = new Discord.MessageEmbed()
-      .setColor('#00eeff')
+        let embed = new Discord.MessageEmbed()
+            .setColor('#00eeff')
+            .setTitle('🌙 Olá, eu sou a Luna')
+            .addFields(
+                { name: 'para ver os comandos de cada categoria, clique nos botões abaixo', value: '\u200b' },
+                { name: '🌐 Geral', value: 'Comandos diversos e utilidades', inline: true },
+                { name: '🎉 Diversão', value: 'Mini jogos da luna, valendo moedas ou não', inline: true },
+                { name: '🖼 Imagens', value: 'Geradores de memes, ou interações como "kiss" e "hug"', inline: true },
+                { name: '⚙ Moderação', value: 'Comandos para organização e controle do servidor e seus membros', inline: true },
+                { name: '💰 Economia', value: 'Comandos de gerenciamento das suas LunaBits, as moedas da Luna', inline: true }
+            );
 
-    var geralCommands = fs.readdirSync(`./commands/geral`);
-    var imagesCommands = fs.readdirSync(`./commands/images`);
-    var modCommands = fs.readdirSync(`./commands/mod`);
-    var moneyCommands = fs.readdirSync(`./commands/money`);
-    var musicCommands = fs.readdirSync(`./commands/music`);
+        if (message.channel.type != 'DM') {
+            let guildData = await guildModel.findOne({ guildID: message.guild.id });
+            embed.setDescription(
+                `Um bot experimental com comandos de moderação, player de música, mini jogos, sistema de economia e muito mais
+                meu prefixo padrão é ' (aspas simples)\nmeu prefixo nesse servidor é ${guildData.prefix}
+                Caso deseje, entre no servidor de suporte e demais interações da Luna: [Luna Lab](https://discord.gg/VFJAqE7Uz6)`);
+        } else embed.setDescription(
+            `Um bot experimental com comandos de moderação, player de música, mini jogos, sistema de economia e muito mais
+            meu prefixo padrão é ' (aspas simples)
+            Caso deseje, entre no servidor de suporte e demais interações da Luna: [Luna Lab](https://discord.gg/VFJAqE7Uz6)`)
 
-    if (!args[0] || (!funNames.includes(args[0]) && !geralNames.includes(args[0]) && !imagesNames.includes(args[0]) && !modNames.includes(args[0]) && !moneyNames.includes(args[0]) && !musicNames.includes(args[0]))) {
+        const categories = fs.readdirSync('./commands');
 
-      if (message.channel.type != 'dm') {
-        let guildData = await guildModel.findOne({ guildID: message.guild.id });
-        var prefix = guildData.prefix;
-        embed.setDescription(`Um bot experimental com comandos de moderação, player de música, mini jogos, sistema de economia e muito mais
-        meu prefixo padrão é ' (aspas simples)\nmeu prefixo nesse servidor é ${prefix}
-        Caso deseje, entre no servidor de suporte e demais interações da Luna: [Luna Lab](https://discord.gg/VFJAqE7Uz6)`);
-      } else {
-        var prefix = "'";
-        embed.setDescription(
-          `Um bot experimental com comandos de moderação, player de música, mini jogos, sistema de economia e muito mais
-          meu prefixo padrão é ' (aspas simples)
-          Caso deseje, entre no servidor de suporte e demais interações da Luna: [Luna Lab](https://discord.gg/VFJAqE7Uz6)`)
-      }
+        let buttons1 = new Discord.MessageActionRow();
+        let buttons2 = new Discord.MessageActionRow();
 
-      embed
-        .setTitle('🌙 Olá, eu sou a Luna')
-        .addFields(
-          {
-            name: '\u200b',
-            value: `para ver os comandos de cada categoria, digite "${prefix}help" seguido do nome da categoria
-            exemplo: "${prefix}help mod" ou "${prefix}help musica"`
-          },
-          {
-            name: 'Geral',
-            value: '` ou: "util", "utilidades", "general"`\ncomandos diversos e utilidades`',
-            inline: true
-          },
-          {
-            name: 'Diversão',
-            value: '` ou: "fun", "jogos", "games"`\nmini jogos da luna, valendo moedas ou não`',
-            inline: true
-          },
-          {
-            name: 'Imagens',
-            value: '` ou: "images", "img", "memes"`\ngeradores de memes, ou interações como "kiss" e "hug"`',
-            inline: true
-          },
-          {
-            name: 'Música',
-            value: '` ou: "music", "player"`\nreprodução de música`',
-            inline: true
-          },
-          {
-            name: 'Moderação',
-            value: '` ou: "mod", "admin", "adm"`\ncomandos para organização e controle do servidor e seus membros`',
-            inline: true
-          },
-          {
-            name: 'Economia',
-            value: '` ou: "money", "dinheiro", "lunaBits", "bits"`\ncomandos de gerenciamento das suas LunaBits, as moedas da Luna`',
-            inline: true
-          }
-        );
+        for (let i = 1; i < embed.fields.length; i++) {
+
+            let buttons = buttons1;
+            if (i > 3) buttons = buttons2;
+
+            const fieldName = embed.fields[i].name
+
+            buttons.addComponents(
+                new Discord.MessageButton()
+                    .setCustomId(categories[i - 1])
+                    .setStyle('PRIMARY')
+                    .setEmoji(fieldName.split(' ')[0])
+                    .setLabel(fieldName.split(' ')[1])
+            );
+
+        }
+
+        let mainMessage = await message.reply({ embeds: [embed], components: [buttons1, buttons2] });
+
+        client.on('interactionCreate', async interaction => {
+
+            if (
+                !interaction.isButton() ||
+                interaction.user.id != message.author.id ||
+                interaction.message.id != mainMessage.id
+            ) return;
+
+            await interaction.deferReply();
+
+            let newEmbed = new Discord.MessageEmbed()
+                .setColor('#00eeff')
+
+            const categoria = fs.readdirSync(`./commands/${interaction.customId}`);
+
+
+            newEmbed
+                .setTitle('Comandos da Luna - ' + interaction.customId)
+                .setDescription('Para ver outras categorias, basta clicar nos botões abaixo');
+
+            categoria.forEach(file => {
+                const categoryFile = require(`../${interaction.customId}/${file}`);
+
+                newEmbed
+                    .addField(categoryFile.name, `Ou: \`${categoryFile.aliases}\`\n${categoryFile.description}`, true)
+            })
+
+            interaction.deleteReply();
+
+            mainMessage.edit({ embeds: [newEmbed] })
+
+        })
 
     }
-
-    if (funNames.includes(args[0])) {
-      embed.setTitle('Comandos de Diversão e mini jogos')
-      embed.addFields({ name: '\u200b', value: '(alguns valendo seus LunaBits)\n' })
-      const funCommands = fs.readdirSync(`./commands/fun`);
-      for (const file of funCommands) {
-        var cmd = require(`../fun/${file}`);
-        embed.addField(cmd.name,
-          `\`${cmd.aliases}\`
-          ${cmd.description}`,
-          true);
-      }
-    };
-
-    if (geralNames.includes(args[0])) {
-      embed.setTitle('Comandos gerais');
-      embed.addFields({ name: '\u200b', value: 'ccomandos diversos e utilidades\n' });
-      const geralCommands = fs.readdirSync(`./commands/geral`);
-      for (const file of geralCommands) {
-        var cmd = require(`../geral/${file}`);
-        embed.addField(cmd.name,
-          `\`${cmd.aliases}\`
-          ${cmd.description}`,
-          true);
-      }
-    };
-
-    if (imagesNames.includes(args[0])) {
-      embed.setTitle('Comandos de imagens');
-      embed.addFields({ name: '\u200b', value: 'comandos de geração de memes ou outros comandos relacionados a imagens\n' });
-      const imagesCommands = fs.readdirSync(`./commands/images`);
-      for (const file of imagesCommands) {
-        var cmd = require(`../images/${file}`);
-        embed.addField(cmd.name,
-          `\`${cmd.aliases}\`
-          ${cmd.description}`,
-          true);
-      }
-    };
-
-    if (modNames.includes(args[0])) {
-      embed.setTitle('Comandos de moderação');
-      embed.addFields({ name: '\u200b', value: 'comandos para organização e controle do servidor e seus membros\n' });
-      const modCommands = fs.readdirSync(`./commands/mod`);
-      for (const file of modCommands) {
-        var cmd = require(`../mod/${file}`);
-        embed.addField(cmd.name,
-          `\`${cmd.aliases}\`
-          ${cmd.description}`,
-          true);
-      }
-    };
-
-    if (moneyNames.includes(args[0])) {
-      embed.setTitle('Comandos de economia');
-      embed.addFields({ name: '\u200b', value: 'comandos de gerenciamento das suas LunaBits, as moedas da Luna\n' });
-      const moneyCommands = fs.readdirSync(`./commands/money`);
-      for (const file of moneyCommands) {
-        var cmd = require(`../money/${file}`);
-        embed.addField(cmd.name,
-          `\`${cmd.aliases}\`
-          ${cmd.description}`,
-          true);
-      }
-    };
-
-    if (musicNames.includes(args[0])) {
-      embed.setTitle('Comandos de música');
-      embed.addFields({ name: '\u200b', value: 'comandos da reprodução de música\n' });
-      const musicCommands = fs.readdirSync(`./commands/music`);
-      for (const file of musicCommands) {
-        var cmd = require(`../music/${file}`);
-        embed.addField(cmd.name,
-          `\`${cmd.aliases}\`
-          ${cmd.description}`,
-          true);
-      }
-    };
-
-    message.reply({ embeds: [embed] });
-
-
-  }
 }
