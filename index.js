@@ -7,14 +7,6 @@ const client = new Discord.Client({
     intents: 8191
 });
 
-const player = new Player(client, {
-    leaveOnEnd: false,
-    leaveOnStop: true,
-    leaveOnEmpty: false,
-    leaveOnEmptyCooldown: 60 * 1000,
-    autoSelfDeaf: true
-});
-
 let skipVote = new Discord.Collection();
 let musicMessages = new Discord.Collection();
 
